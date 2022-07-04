@@ -5,7 +5,6 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
     document.getElementById("ajax_form").reset();
   })
 
-
 	$(document).on('click','.modalUser',function(){
 
     let data_id = $(this).data('id');
@@ -14,7 +13,6 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
     let data_role = $(this).data('role');
     let data_status = $(this).data('status');
 
-
 	// Задаем значения в модальном окне 
 	$('#first-name').val(data_firstname);
 	$('#last-name').val(data_lastname);
@@ -22,14 +20,12 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 	$('#delete-user-first-name').val(data_firstname);
 	$('#delete-user-last-name').val(data_lastname);
 
-
 	if(typeof(data_id) != 'undefined'){
 		if(data_status == 1){
 			$('#toggle').prop('checked', true);
 		}else{
 			$('#toggle').removeProp('checked'); 
 		}
-
 
 		if(data_role !== ""){
 				if(data_role === 1){
@@ -44,11 +40,8 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 	intro.prop('value', data_id);
 	}
 
-	//console.log(data_id);
-
   	});
 
-  	
     $("#list-button").click(
 		function(){
 
@@ -70,23 +63,6 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 			console.log(cBox)
 			console.log(selectedValue)
 
-			// function loadpage(){
-			//   $.ajax({
-			//   type: "POST",
-			//   url: "/index.php",
-			//   data: "",
-			//   dataType: "html",
-			//   cache: false,
-			//   success: function(data) {
-			     
-			//     //$('#container').html(data);
-			//     $('#container').html($(data).find('#container').html());
-
-			      
-			//       }
-			// });          
-			// }
-
           $.ajax({
             url: 'update.php',
             type: 'POST',
@@ -100,14 +76,6 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
   				dataType: "html",
   				cache: false,
   				success: function(data) {
-  					//let elem = data.find('#container').html();
-    				//$('#container').html(data);
-    				//$('#container').html($(data).find('#container').html());
-    				//loadpage();
-    				//$("#container").load( "index.php div#container" );
-
-					//$( "#table" ).load( "index.php #table" );
-
 					cBox.forEach(function(elem) {
 						if(selectedValue == 1){
 							$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
@@ -123,15 +91,11 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 						}
 
 					});
-
-    				//console.log(cBox);
       			}
 			});
             }
           })
 			return false; 
-
-
 		}
 	);      	
 
@@ -145,16 +109,13 @@ $("#all-items").click( function() {
 	  		}
 	 	}
 	}
-
 })
-
 
 // Получаем все элементы с классом custom-control-input которые находятся в элементе div с id="checklist"
 // Снимаем галочку с выбрать все при нажатии на чекбокс любого человека
 $('div#checklist .custom-control-input').change(function(){
 	$('#all-items').prop('checked', false);
 })
-
 
     $("#btn").click(
 		function(){
@@ -193,7 +154,6 @@ function sendAjaxForm(result_form, ajax_form, url) {
         data: $("#"+ajax_form).serialize(),  // Сеарилизуем объект
         success: function(response) { //Данные отправлены успешно
         	let result = $.parseJSON(response);
-        	//console.log(result.firstName); // Отпровка json возврата в консоль
         	if(result.status == false){
         		$('#result_form').html('<div class="alert alert-danger" role="alert"><b>Error:</b> Fields must not be empty!</div>');
         	}else{
@@ -248,7 +208,6 @@ function sendAjaxForm(result_form, ajax_form, url) {
 						</tr>
 						`)
 
-
 				}else if(result.action == 'edit'){
 					$(`[data-rowId='${result.uId}']`).find('.username').text(result.firstName + ' ' + result.lastName);
 
@@ -291,8 +250,6 @@ function sendAjaxForm(result_form, ajax_form, url) {
 					$('#delete-user-form-modal').modal('hide');
 					$(`[data-rowId='${result.uId}']`).remove();
 				}
-
-
         	}
     	},
     	error: function(response) { // Данные не отправлены
