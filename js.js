@@ -20,6 +20,7 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 	$('#delete-user-first-name').val(data_firstname);
 	$('#delete-user-last-name').val(data_lastname);
 
+	// Меняем поля при едите
 	if(typeof(data_id) != 'undefined'){
 		if(data_status == 1){
 			$('#toggle').prop('checked', true);
@@ -40,26 +41,56 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 	intro.prop('value', data_id);
 	}
 
+	if(typeof(data_id) != 'undefined'){
+		$('#UserModalLabel').text('Edit user');  // Change text to edit
+		$('#btn').text('Save');  // Change text to edit
+	}else{
+		$('#UserModalLabel').text('Add user');  // Change text to add
+		$('#btn').text('Add');  // Change text to edit
+	}
+
   	});
 
-    $("#list-button").click(
-		function(){
+	// Для избежания конфликтов select
+	$(document).on('click','#customSelect',function(){
+		$('.custom-select option:first').prop('selected', true);
+	})
+
+	$(document).on('click','.customSelect',function(){
+		$('.custom-select option:first').prop('selected', true);
+	})
+
+
+    $(document).on('click','.listbtn',function(){
 
 			// Собираем выбранный чекбоксы в массив
 			let cBox = [];
 			$("input[type=checkbox]:checked").each(function(){
     			cBox.push($(this).attr("value"));
     		});
-
 			// Удаляем пустые элементы с массива
 			cBox = cBox.filter(function (el) {
     			return (el != null && el != "" || el === 0);
 			});
 
-			// Выбранный селект
-			let selectedValue = $("option:selected").attr("value");
+			if(cBox.length == 0){
+				$('#empty-list-modal').modal('show')
+				$('#empty-list-modal-c').text('Users is not selected!');  // Change text to edit
+			}
 
-			sendAjaxForm('result_form', 'ajax_form', 'action_ajax_form.php');
+
+			// Выбранный селект
+			let selectedValue = $(".custom-select option:selected").attr("value");
+			if(typeof(selectedValue) == 'undefined'){
+				selectedValue = $("#customSelect option:selected").attr("value");
+				console.log(selectedValue)
+			}
+
+			if(typeof(selectedValue) == 'undefined'){
+				$('#empty-list-modal').modal('show')
+				$('#empty-list-modal-c').text('Action is not selected!');  // Change text to edit
+			}
+
 			console.log(cBox)
 			console.log(selectedValue)
 
@@ -90,9 +121,12 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 							return false;
 						}
 
+						$('.custom-select option:first').prop('selected', true);
+
 					});
       			}
 			});
+
             }
           })
 			return false; 
@@ -114,7 +148,18 @@ $("#all-items").click( function() {
 // Получаем все элементы с классом custom-control-input которые находятся в элементе div с id="checklist"
 // Снимаем галочку с выбрать все при нажатии на чекбокс любого человека
 $('div#checklist .custom-control-input').change(function(){
-	$('#all-items').prop('checked', false);
+
+  let countSelected = $('div#checklist input:checked').length;
+  let countSelectedAll = $('div#checklist .custom-control-input').length;
+
+  if(countSelected == countSelectedAll){
+  	$('#all-items').prop('checked', true);
+  }  
+
+  if(countSelected != countSelectedAll){
+  	  $('#all-items').prop('checked', false);
+  }
+
 })
 
     $("#btn").click(
@@ -185,7 +230,7 @@ function sendAjaxForm(result_form, ajax_form, url) {
 							<td class="status">
                               ${status}
                           	</td>
-                          	<td>
+                          	<td class="button">
                           	<div class="badge">
 	                              <button class="btn modalUser" type="button" data-toggle="modal"
 	                                data-target="#user-form-modal" 
@@ -245,7 +290,7 @@ function sendAjaxForm(result_form, ajax_form, url) {
 	                            </div>`);
 					let intro = $('#u-id');
 					intro.prop('value', '');
-
+					
 				}else if(result.action == 'delete'){
 					$('#delete-user-form-modal').modal('hide');
 					$(`[data-rowId='${result.uId}']`).remove();

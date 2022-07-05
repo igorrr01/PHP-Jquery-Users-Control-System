@@ -23,7 +23,7 @@
                          </select>
                         </div>
                       <div class="col-sm-1">
-                        <button type="button" class="btn btn-outline-success" id="list-button" >Ok</button>
+                        <button type="button" class="btn listbtn" >Ok</button>
                       </div>
                     </div>
                 <div class="e-table">
@@ -109,6 +109,23 @@
                       </tbody>
                     </table>
                   </div>
+
+                    <div class = "row">
+                      <div class="col-sm-6">
+                        <button type="button" class="btn modalUser" data-toggle="modal" data-target="#user-form-modal">Add</button>
+                      </div>
+                      <div class="col-sm-5">
+                        <select class="custom-select" id="customSelect">
+                          <option selected>Please Select</option>
+                          <option value="1">Set active</option>
+                          <option value="2">Set not active</option>
+                          <option value="3">Delete</option>
+                         </select>
+                        </div>
+                      <div class="col-sm-1">
+                        <button type="button" class="btn listbtn" >Ok</button>
+                      </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -123,7 +140,7 @@
                 <div id="result_form"></div>   
             </div>
             <div class="modal-header">
-              <h5 class="modal-title" id="UserModalLabel">Add/Edit user</h5>
+              <h5 class="modal-title" id="UserModalLabel">Add User</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -143,34 +160,33 @@
                   <div class="col-sm-11">
                     <p>Status:</p>
                   </div>
-                  <div class="col-sm">
-                    <div class="material-toggle">
-                <p><input type="checkbox" id="toggle" name="toggle" checked class="switch" />
-                <label for="toggle" class=""></label></p>
+                  <p>
+                    <input type="checkbox" id="toggle" name="toggle" checked class="switch_1" />
+                    <label for="toggle" class=""></label>
+                  </p>
+                </div>
+                <div class = "row">
+                  <div class="col-sm-8">
+                    <p>Role:</p>
+                  </div>
+              <div class="col-sm">
+                <select class="custom-select" id="list" name="roleSelect">
+                  <option id="role"  value="0">Please Select</option>
+                  <option id="role"  value="1">User</option>
+                  <option id="role"  value="2">Admin</option>
+              </select>
+              </div>
+            </div>
+            </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn">Save</button>
               </div>
             </div>
           </div>
-          <div class = "row">
-            <div class="col-sm-8">
-              <p>Role:</p>
-            </div>
-            <div class="col-sm">
-              <select class="custom-select" id="list" name="roleSelect">
-                <option id="role"  value="0">Please Select</option>
-                <option id="role"  value="1">User</option>
-                <option id="role"  value="2">Admin</option>
-            </select>
-            </div>
-          </div>
-          </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="btn">Save</button>
-            </div>
-          </div>
         </div>
-      </div>
+
       <!-- Delete User Form Modal -->
         <div class="modal fade" id="delete-user-form-modal" tabindex="-1" aria-labelledby="delete-user-form-modal" aria-hidden="true">
         <div class="modal-dialog">
@@ -194,7 +210,24 @@
             </div>
           </div>
         </div>
-      </div>      
+      </div> 
+
+      <!-- Empty list modal -->
+        <div class="modal fade" id="empty-list-modal" tabindex="-1" aria-labelledby="empty-list-modal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="alert alert-danger" role="alert">
+                <h5 class="modal-title" id="UserModalLabel">Error:</h5>
+              </div>
+              <div class="modal-body" id="empty-list-modal-c">
+                
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div> 
     </div>
   </div>
 </body>

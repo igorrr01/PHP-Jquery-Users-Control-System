@@ -11,4 +11,4 @@
 </head>
 <body>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
+  <link href="styles.css?v=1.0" rel="stylesheet">
