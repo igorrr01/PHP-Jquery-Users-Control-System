@@ -35,6 +35,13 @@ class DB{
 		return json_encode($rows);
 	}
 
+	public function rowCount($sql){
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute();
+		$stmt->store_result();
+		return $stmt->num_rows;
+	}
+
 }
 
 

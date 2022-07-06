@@ -27,6 +27,10 @@ if($selectedValue == 1 || $selectedValue == 2){
 
 $result = [
 	'status' => false,
+	'error' => [
+		'code' => 120,
+		'message' => 'No action selected'
+	],
 ]; 
 echo json_encode($result); 
 exit;
@@ -36,9 +40,11 @@ exit;
 // Формируем массив для JSON ответа
 $result = [
 	'status' => true,
-	'id' => $cBox,
-	'selectedValue' => $selectedValue,
-	'count' => count($cBox),
+	'error' => null,
+	'user' =>
+		[
+			'uId' => $cBox,
+		]
 ]; 
 
 // Переводим массив в JSON

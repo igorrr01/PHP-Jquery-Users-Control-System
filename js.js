@@ -203,17 +203,15 @@ $('div#checklist .custom-control-input').change(function(){
 
 	$('#UserModalLabelDel').text('Are you sure you want to delete the user '+data_firstname+' '+data_lastname);  // Add text when del. user
 
-	console.log(data_id);
-
-	    $("#btnDel").click(
-			function(){
-				sendAjaxForm('result_form', 'ajax_form_del', 'action_ajax_form.php');
-				return false; 
-			}
-		);    
 	})
 
 });
+
+$(document).on('click','#btnDel',function(){
+	sendAjaxForm('result_form', 'ajax_form_del', 'action_ajax_form.php');
+		return false; 
+	}
+);    
 
 // Ajax Send Form
 function sendAjaxForm(result_form, ajax_form, url) {
@@ -225,7 +223,20 @@ function sendAjaxForm(result_form, ajax_form, url) {
         success: function(response) { //Данные отправлены успешно
         	let result = $.parseJSON(response);
         	if(result.status == false){
-        		$('#result_form').html('<div class="alert alert-danger" role="alert"><b>Error:</b> Fields must not be empty!</div>');
+        		if(result.error.role == 0){
+        			$('#result_form').html('<div class="alert alert-danger" role="alert"><b>Error:</b> Role must be selected!</div>');
+        		}else{
+        			$('#result_form').html('<div class="alert alert-danger" role="alert"><b>Error:</b> Fields must not be empty!</div>');
+        		}
+
+        		if(result.error.code == 110){
+        			$('#UserModalLabelDel').html('<div class="alert alert-danger" role="alert"><b>Error:</b> User is not found!</div>');
+        		}
+
+        		if(result.error.code == 111){
+        			$('#result_form').html('<div class="alert alert-danger" role="alert"><b>Error:</b> User is not found!</div>');
+        		}
+
         	}else{
         		$('#user-form-modal').modal('hide');
         		console.log(result);
@@ -234,20 +245,20 @@ function sendAjaxForm(result_form, ajax_form, url) {
         			// Скрываем div 
         			$("div[id='user-not-found']").remove();
 
-					let role = result.roleSelect == 1 ? "User" : "Admin";
-	        		let status = result.toggle == 1 ? "<div style='text-align:center;'><i class='fa fa-circle active-circle'></i></div>" : "<div style='text-align:center;'><i class='fa fa-circle not-active-circle'></i></div>";
+					let role = result.user.roleSelect == 1 ? "User" : "Admin";
+	        		let status = result.user.toggle == 1 ? "<div style='text-align:center;'><i class='fa fa-circle active-circle'></i></div>" : "<div style='text-align:center;'><i class='fa fa-circle not-active-circle'></i></div>";
 
 					$('table').append(`
-						<tr data-rowId = '${result.uId}'>
+						<tr data-rowId = '${result.user.uId}'>
 							<td>	
 								<div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top" id="checklist">
                               		<input type="hidden" class="form-control" id="list-action" name="list-action" value="true">
-                                	<input type="checkbox" name="az" class="custom-control-input" id="item-${result.uId}" value="${result.uId}">
-                                	<label class="custom-control-label" for="item-${result.uId}"></label>
+                                	<input type="checkbox" name="az" class="custom-control-input" id="item-${result.user.uId}" value="${result.uId}">
+                                	<label class="custom-control-label" for="item-${result.user.uId}"></label>
                               	</div>
 							</td>
 							<td class="username">
-								${result.firstName} ${result.lastName}
+								${result.user.firstName} ${result.user.lastName}
 							</td>
 							<td class="role">
                               ${role}
@@ -259,19 +270,19 @@ function sendAjaxForm(result_form, ajax_form, url) {
                           	<div class="badge">
 	                              <button class="btn modalUser" type="button" data-toggle="modal"
 	                                data-target="#user-form-modal" 
-	                                data-id="${result.uId}"
-	                                data-firstname="${result.firstName}"
-	                                data-lastname="${result.lastName}"
-	                                data-role="${result.roleSelect}"
-	                                data-status="${result.toggle}"
+	                                data-id="${result.user.uId}"
+	                                data-firstname="${result.user.firstName}"
+	                                data-lastname="${result.user.lastName}"
+	                                data-role="${result.user.roleSelect}"
+	                                data-status="${result.user.toggle}"
 	                                >Edit</button>
 	                                </div>
 	                                <div class="badge">
 	                              <button class="btn deleteUser" type="button" data-toggle="modal"
 	                                data-target="#delete-user-form-modal" 
-	                                data-firstname="${result.firstName}"
-	                                data-lastname="${result.lastName}"
-	                                data-id="${result.uId}">
+	                                data-firstname="${result.user.firstName}"
+	                                data-lastname="${result.user.lastName}"
+	                                data-id="${result.user.uId}">
 	                                <i class="fa fa-trash"></i></button>
 	                                </div>
                           	</td>
@@ -279,37 +290,37 @@ function sendAjaxForm(result_form, ajax_form, url) {
 						`)
 
 				}else if(result.action == 'edit'){
-					$(`[data-rowId='${result.uId}']`).find('.username').text(result.firstName + ' ' + result.lastName);
+					$(`[data-rowId='${result.user.uId}']`).find('.username').text(result.user.firstName + ' ' + result.user.lastName);
 
-					if(result.roleSelect == 1){
-						$(`[data-rowId='${result.uId}']`).find('.role').text('User');
+					if(result.user.roleSelect == 1){
+						$(`[data-rowId='${result.user.uId}']`).find('.role').text('User');
 					}else{
-						$(`[data-rowId='${result.uId}']`).find('.role').text('Admin');
+						$(`[data-rowId='${result.user.uId}']`).find('.role').text('Admin');
 					}
 
-					if(result.toggle == 1){
-						$(`[data-rowId='${result.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
+					if(result.user.toggle == 1){
+						$(`[data-rowId='${result.user.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
 					}else{
-						$(`[data-rowId='${result.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
+						$(`[data-rowId='${result.user.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
 					}
 
-					$(`[data-rowId='${result.uId}']`).find('.button').html(`<div class="btn-group align-top" id="editDel">
+					$(`[data-rowId='${result.user.uId}']`).find('.button').html(`<div class="btn-group align-top" id="editDel">
 						<div class="badge">
 	                              <button class="btn modalUser" type="button" data-toggle="modal"
 	                                data-target="#user-form-modal" 
-	                                data-id="${result.uId}"
-	                                data-firstname="${result.firstName}"
-	                                data-lastname="${result.lastName}"
-	                                data-role="${result.roleSelect}"
-	                                data-status="${result.toggle}"
+	                                data-id="${result.user.uId}"
+	                                data-firstname="${result.user.firstName}"
+	                                data-lastname="${result.user.lastName}"
+	                                data-role="${result.user.roleSelect}"
+	                                data-status="${result.user.toggle}"
 	                                >Edit</button>
 	                                </div>
 	                                <div class="badge">
 	                              <button class="btn deleteUser" type="button" data-toggle="modal"
 	                                data-target="#delete-user-form-modal" 
-	                                data-firstname="${result.firstName}"
-	                                data-lastname="${result.lastName}"
-	                                data-id="${result.uId}">
+	                                data-firstname="${result.user.firstName}"
+	                                data-lastname="${result.user.lastName}"
+	                                data-id="${result.user.uId}">
 	                                <i class="fa fa-trash"></i></button>
 	                                </div>
 	                            </div>`);
@@ -318,7 +329,10 @@ function sendAjaxForm(result_form, ajax_form, url) {
 					
 				}else if(result.action == 'delete'){
 					$('#delete-user-form-modal').modal('hide');
-					$(`[data-rowId='${result.uId}']`).remove();
+					$(`[data-rowId='${result.user.uId}']`).remove();
+
+				/*	let intro = $('#del-u-id');
+					intro.prop('value', '');*/
 				}
         	}
     	},
