@@ -10,5 +10,5 @@
   <script src="js.js?<?php echo rand(1111,999999); ?>"></script>
 </head>
 <body>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="styles.css?v=1.0" rel="stylesheet">
+	<link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
+  <link href="styles.css?v=1.1" rel="stylesheet">

@@ -7,6 +7,9 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 
 	$(document).on('click','.modalUser',function(){
 
+	//Сбрасываем уведомления
+	$('#result_form').html('');
+
     let data_id = $(this).data('id');
     let data_firstname = $(this).data('firstname');
     let data_lastname = $(this).data('lastname');
@@ -75,7 +78,8 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 
 			if(cBox.length == 0){
 				$('#empty-list-modal').modal('show')
-				$('#empty-list-modal-c').text('Users is not selected!');  // Change text to edit
+				$('#empty-list-modal-c').html('<b>Error:</b> Users is not selected!');  // Change text to edit
+				return false
 			}
 
 
@@ -88,12 +92,26 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 
 			if(typeof(selectedValue) == 'undefined'){
 				$('#empty-list-modal').modal('show')
-				$('#empty-list-modal-c').text('Action is not selected!');  // Change text to edit
+				$('#empty-list-modal-c').html('<b>Error:</b> Action is not selected!');  // Change text to edit
 			}
 
-			console.log(cBox)
-			console.log(selectedValue)
+			if(selectedValue == 3){
+				$('#delete-list-modal').modal('show')
+				$('#delete-list-modal-c').html(`Are you sure you want to delete ${cBox.length} users?`);  // Change text to edit
+				selectedValue = 0;
+					$("#deleteTrue").click(
+					function(){
+						selectedValue = 3;
+						sendAjax();
+						$('#delete-list-modal').modal('hide');
+					}
+				);
+			}
 
+			sendAjax();
+
+function sendAjax() {
+	console.log(cBox)
           $.ajax({
             url: 'update.php',
             type: 'POST',
@@ -129,13 +147,19 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 
             }
           })
+      }
 			return false; 
 		}
 	);      	
 
 $("#all-items").click( function() {
 
-	if($('#all-items').attr('checked', true)){
+  let countSelected = $('div#checklist input:checked').length;
+  let countSelectedAll = $('div#checklist .custom-control-input').length;
+
+  if(countSelected == countSelectedAll){
+	$('input:checked').prop('checked', false);
+  }else if($('#all-items').attr('checked', true)){
 	    let check=document.getElementsByTagName('input');
 	    for(let i=0;i<check.length;i++){
 	  		if(check[i].type=='checkbox'){
@@ -143,6 +167,7 @@ $("#all-items").click( function() {
 	  		}
 	 	}
 	}
+
 })
 
 // Получаем все элементы с классом custom-control-input которые находятся в элементе div с id="checklist"

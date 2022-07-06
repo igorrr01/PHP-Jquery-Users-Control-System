@@ -9,7 +9,7 @@
             <div class="e-panel card">
               <div class="card-body">
                 <div class="card-title">
-                  <h6 class="mr-2"><span>Users</span></h6>
+                  <h6 class="mr-2"><span><i class="fas fa-users"></i> Users</span></h6>
                     <div class = "row">
                       <div class="col-sm-6">
                         <button type="button" class="btn modalUser" data-toggle="modal" data-target="#user-form-modal">Add</button>
@@ -38,10 +38,10 @@
                               <label class="custom-control-label" for="all-items"></label>
                             </div>
                           </th>
-                          <th class="max-width">Name</th>
-                          <th class="sortable">Role</th>
-                          <th>Status</th>
-                          <th>Actions</th>
+                          <th class="max-width"><i class="fas fa-user"></i> Name</th>
+                          <th class="sortable"><i class="fas fa-star"></i> Role</th>
+                          <th><i class="fas fa-check-circle"></i> Status</th>
+                          <th><i class="fas fa-cog"></i> Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -149,27 +149,32 @@
               <form method="post" id="ajax_form" action="" >
                 <input type="hidden" class="form-control" name="u-id" id="u-id" value="">
                 <div class="form-group">
+                  <i class="fas fa-user"></i>
                   <label for="first-name" class="col-form-label">First Name:</label>
                   <input type="text" class="form-control" id="first-name" name="first-name">
                 </div>
                 <div class="form-group">
+                  <i class="fas fa-user"></i>
                   <label for="last-name" class="col-form-label">Last Name:</label>
                   <input type="text" class="form-control" id="last-name" name="last-name">
                 </div>
                 <div class = "row">
-                  <div class="col-sm-11">
-                    <p>Status:</p>
+                  <div class="col-sm-3">
+                      <i class="fas fa-check-circle"></i> Status:
                   </div>
-                  <p>
-                    <input type="checkbox" id="toggle" name="toggle" checked class="switch_1" />
-                    <label for="toggle" class=""></label>
-                  </p>
+                  <div class="col-sm-5">
+                      <label class="cl-switch">
+                      <input type="checkbox" id="toggle" name="toggle" checked >
+                      <span class="switcher"></span>
+                      <label for="toggle" class=""></label>
+                      </label> 
+                  </div>  
                 </div>
                 <div class = "row">
-                  <div class="col-sm-8">
-                    <p>Role:</p>
+                  <div class="col-sm-3">
+                    <i class="fas fa-star"></i> Role:
                   </div>
-              <div class="col-sm">
+              <div class="col-sm-5">
                 <select class="custom-select" id="list" name="roleSelect">
                   <option id="role"  value="0">Please Select</option>
                   <option id="role"  value="1">User</option>
@@ -213,21 +218,29 @@
       </div> 
 
       <!-- Empty list modal -->
-        <div class="modal fade" id="empty-list-modal" tabindex="-1" aria-labelledby="empty-list-modal" aria-hidden="true">
+      <div class="modal fade" id="empty-list-modal" tabindex="-1" aria-labelledby="empty-list-modal" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-              <div class="alert alert-danger" role="alert">
-                <h5 class="modal-title" id="UserModalLabel">Error:</h5>
-              </div>
-              <div class="modal-body" id="empty-list-modal-c">
-                
-              </div>
-            <div class="modal-footer">
+            <div class="modal-body" id="empty-list-modal-c"></div>
+            <div class="modal-footer" >
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
       </div> 
+
+       <div class="modal fade" id="delete-list-modal" tabindex="-1" aria-labelledby="delete-list-modal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body" id="delete-list-modal-c"></div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="deleteTrue">Delete</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>  
+
     </div>
   </div>
 </body>
