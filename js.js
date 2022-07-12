@@ -87,7 +87,6 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 			let selectedValue = $(".custom-select option:selected").attr("value");
 			if(typeof(selectedValue) == 'undefined'){
 				selectedValue = $("#customSelect option:selected").attr("value");
-				console.log(selectedValue)
 			}
 
 			if(typeof(selectedValue) == 'undefined'){
@@ -118,20 +117,13 @@ function sendAjax() {
             data: {'cBox': cBox, 'selectedValue': selectedValue},
             dataType: 'html',
             success: function(data){
-            	$.ajax({
-  				type: "POST",
-  				url: "/index.php",
-  				data: "",
-  				dataType: "html",
-  				cache: false,
-  				success: function(data) {
 					cBox.forEach(function(elem) {
 						if(selectedValue == 1){
 							$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
 						}else if(selectedValue == 2){
 							$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
 						}else if(selectedValue == 3){
-							$(`[data-rowId='${elem}']`).load(`index.php [data-rowId='${elem}']` );
+							$(`[data-rowId='${elem}']`).remove();
 
 							$('#all-items').prop('checked', false);
 												
@@ -142,8 +134,7 @@ function sendAjax() {
 						$('.custom-select option:first').prop('selected', true);
 
 					});
-      			}
-			});
+      	
 
             }
           })
@@ -172,10 +163,14 @@ $("#all-items").click( function() {
 
 // Получаем все элементы с классом custom-control-input которые находятся в элементе div с id="checklist"
 // Снимаем галочку с выбрать все при нажатии на чекбокс любого человека
-$('div#checklist .custom-control-input').change(function(){
 
-  let countSelected = $('div#checklist input:checked').length;
-  let countSelectedAll = $('div#checklist .custom-control-input').length;
+  let countSelected;
+  let countSelectedAll;
+
+$(document).on('click','div#checklist .custom-control-input',function(){
+
+ countSelected = $('div#checklist input:checked').length;
+ countSelectedAll = $('div#checklist .custom-control-input').length;
 
   if(countSelected == countSelectedAll){
   	$('#all-items').prop('checked', true);
@@ -241,7 +236,9 @@ function sendAjaxForm(result_form, ajax_form, url) {
         		$('#user-form-modal').modal('hide');
         		console.log(result);
         		if(result.action == 'add'){
-        			$('#result_form').hide();
+
+        			//$('#result_form').hide();
+        			$('#result_form').html('');
         			// Скрываем div 
         			$("div[id='user-not-found']").remove();
 
@@ -253,7 +250,7 @@ function sendAjaxForm(result_form, ajax_form, url) {
 							<td>	
 								<div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top" id="checklist">
                               		<input type="hidden" class="form-control" id="list-action" name="list-action" value="true">
-                                	<input type="checkbox" name="az" class="custom-control-input" id="item-${result.user.uId}" value="${result.uId}">
+                                	<input type="checkbox" name="az" class="custom-control-input" id="item-${result.user.uId}" value="${result.user.uId}">
                                 	<label class="custom-control-label" for="item-${result.user.uId}"></label>
                               	</div>
 							</td>

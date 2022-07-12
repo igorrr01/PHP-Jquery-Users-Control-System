@@ -41,10 +41,7 @@ exit;
 $result = [
 	'status' => true,
 	'error' => null,
-	'user' =>
-		[
-			'uId' => $cBox,
-		]
+	'ids' => $cBox,
 ]; 
 
 // Переводим массив в JSON

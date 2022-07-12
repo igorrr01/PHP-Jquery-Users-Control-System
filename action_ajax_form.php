@@ -1,12 +1,6 @@
 <?php 
 require __DIR__ . '/db.php';
 
-$firstName = htmlspecialchars($_POST["first-name"]);
-$lastName = htmlspecialchars($_POST["last-name"]);
-$roleSelect = htmlspecialchars($_POST["roleSelect"]);
-$uId = htmlspecialchars($_POST["u-id"]);
-
-
 if(isset($_POST["delAction"]) && $_POST["delAction"] == true ){
 		$uIdDel = htmlspecialchars($_POST["del-u-id"]);
 
@@ -46,6 +40,11 @@ if(isset($_POST["delAction"]) && $_POST["delAction"] == true ){
 	    echo json_encode($result); 
 	    exit;
 }
+
+$firstName = htmlspecialchars($_POST["first-name"]);
+$lastName = htmlspecialchars($_POST["last-name"]);
+$roleSelect = htmlspecialchars($_POST["roleSelect"]);
+$uId = htmlspecialchars($_POST["u-id"]);
 
 // Toggle 
 if(!isset($_POST["toggle"])){
