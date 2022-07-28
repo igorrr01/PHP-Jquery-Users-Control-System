@@ -4,6 +4,8 @@ require __DIR__ . '/db.php';
 $cBox = $_POST['cBox'];
 $selectedValue = $_POST['selectedValue'];
 
+$result = [];
+$not_found = [];
 
 if($selectedValue == 1 || $selectedValue == 2){
 
@@ -14,12 +16,30 @@ if($selectedValue == 1 || $selectedValue == 2){
 	}
 
 	foreach ($cBox as $value) {
+
+		$sql = "SELECT * FROM users WHERE `id` = '$value'";
+		$uCount = $dbConnect->rowCount($sql);
+
+		if($uCount == 0){
+
+			$not_found[] = $value;
+
+		}
+
 		$sql = "UPDATE `users` SET `status` = $status WHERE `id` = '$value' ";
 		$dbConnect->query($sql);
 	}
 
 }elseif($selectedValue == 3){
 	foreach ($cBox as $value) {
+
+		$sql = "SELECT * FROM users WHERE `id` = '$value'";
+		$uCount = $dbConnect->rowCount($sql);
+		
+		if($uCount == 0){
+			$not_found[] = $value;
+		}
+
 		$sql = "DELETE FROM `users` WHERE `id` = '$value' ";
 		$dbConnect->query($sql);
 	}
@@ -32,18 +52,30 @@ $result = [
 		'message' => 'No action selected'
 	],
 ]; 
+
 echo json_encode($result); 
 exit;
 
 }
 
-// Формируем массив для JSON ответа
-$result = [
-	'status' => true,
-	'error' => null,
-	'ids' => $cBox,
-]; 
+if(!empty($not_found)){
 
-// Переводим массив в JSON
+	$result = [
+		'status' => true,
+		'error' => null,
+		'ids' => $cBox,
+		'not_found_ids' => $not_found,
+	]; 
+
+}else{
+
+	$result = [
+		'status' => true,
+		'error' => null,
+		'ids' => $cBox,
+	]; 
+
+}
+
 echo json_encode($result); 
 exit;

@@ -32,7 +32,10 @@ class DB{
 		while(@$row=$result->fetch_array($type)){
 			$rows[]=$row;
 		}
-		return json_encode($rows);
+		
+		if(isset($rows)){
+			return json_encode($rows);
+		}
 	}
 
 	public function rowCount($sql){

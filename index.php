@@ -49,8 +49,11 @@
                       $sql = "SELECT * FROM users";
                       $arr = $dbConnect->fetchAll($sql);
                       $array = json_decode($arr, true);
-                      if(isset($array))
-                      $arrayCount = count($array);
+                      if(isset($array)){
+                        $arrayCount = count($array);
+                      }else{
+                        $arrayCount = 0;
+                      }
                       if($arrayCount >= 1){
                       foreach ($array as $value) {
                         $for = 'for="item-' . $value['id'] . '"';
@@ -102,9 +105,9 @@
                         </tr>
                         <?php } ?>
                         <?php }else{ ?>
-                        <div class="alert alert-warning" role="alert" id="user-not-found">
+                   <!--      <div class="alert alert-warning" role="alert" id="user-not-found">
                           Users is not found!
-                        </div>
+                        </div> -->
                         <?php } ?>
                       </tbody>
                     </table>
@@ -235,6 +238,17 @@
             <div class="modal-body" id="delete-list-modal-c"></div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" id="deleteTrue">Delete</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div> 
+
+      <div class="modal fade" id="info-modal" tabindex="-1" aria-labelledby="info-modal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body" id="info-modal-c"></div>
+            <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>

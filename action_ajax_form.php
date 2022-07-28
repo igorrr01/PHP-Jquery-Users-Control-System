@@ -24,7 +24,6 @@ if(isset($_POST["delAction"]) && $_POST["delAction"] == true ){
 		$sql = "DELETE FROM `users` WHERE `id` = '$uIdDel' ";
 		$dbConnect->query($sql);
 
-	    // Формируем массив для JSON ответа
 		$result = [
 			'status' => true,
 			'error' => null,
@@ -36,7 +35,6 @@ if(isset($_POST["delAction"]) && $_POST["delAction"] == true ){
 				]
 		]; 
 
-	    // Переводим массив в JSON
 	    echo json_encode($result); 
 	    exit;
 }
@@ -46,7 +44,6 @@ $lastName = htmlspecialchars($_POST["last-name"]);
 $roleSelect = htmlspecialchars($_POST["roleSelect"]);
 $uId = htmlspecialchars($_POST["u-id"]);
 
-// Toggle 
 if(!isset($_POST["toggle"])){
 	$toggle = 0;
 }else{
@@ -59,7 +56,6 @@ if (!empty($firstName)  && !empty($lastName) && $roleSelect != 0) {
 
 		$sql = "INSERT INTO users (first_name, last_name, role, status) VALUES ('$firstName', '$lastName', '$roleSelect', '$toggle')";
 		$last_id = $dbConnect->insert($sql);
-		// Формируем массив для JSON ответа
 		$result = [
 				'status' => true,
 				'error' => null,
@@ -74,7 +70,6 @@ if (!empty($firstName)  && !empty($lastName) && $roleSelect != 0) {
 		    		]
 		    ]; 
 
-		 // Переводим массив в JSON
 		 echo json_encode($result); 
 	}else{
 
@@ -98,7 +93,6 @@ if (!empty($firstName)  && !empty($lastName) && $roleSelect != 0) {
 		$sql = "UPDATE `users` SET `first_name` = '$firstName', `last_name` = '$lastName', `status` = '$toggle', `role` = '$roleSelect' WHERE `id` = '$uId' ";
 		$dbConnect->query($sql);
 
-		// Формируем массив для JSON ответа
 		$result = [
 				'status' => true,
 				'error' => null,
@@ -114,7 +108,6 @@ if (!empty($firstName)  && !empty($lastName) && $roleSelect != 0) {
 		    		]
 		    ]; 
 
-		// Переводим массив в JSON
 		echo json_encode($result); 			
 	}
 
@@ -125,7 +118,7 @@ if($roleSelect == 0){
 }else{
 	$message = 'Fields must not be empty!';	
 }
-// Формируем массив для JSON ответа
+
 $result = [
 	'status' => false, 
 	'error' => [
@@ -135,7 +128,6 @@ $result = [
 	]
 ]; 
 
-// Переводим массив в JSON
 echo json_encode($result); 
 }
 	

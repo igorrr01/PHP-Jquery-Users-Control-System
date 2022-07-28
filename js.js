@@ -3,6 +3,8 @@ $( document ).ready(function() {
 // Чистим модаьное окно
 $('#user-form-modal').on('hidden.bs.modal', function (e) {
     document.getElementById("ajax_form").reset();
+/*    let intro = $('#u-id');
+	intro.prop('value', '');*/
   })
 
 	$(document).on('click','.modalUser',function(){
@@ -14,7 +16,7 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
     let data_firstname = $(this).data('firstname');
     let data_lastname = $(this).data('lastname');
     let data_role = $(this).data('role');
-    let data_status = $(this).data('status');
+    let data_status = $(this).attr('data-status');
 
 	// Задаем значения в модальном окне 
 	$('#first-name').val(data_firstname);
@@ -63,7 +65,6 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 		$('.custom-select option:first').prop('selected', true);
 	})
 
-
     $(document).on('click','.listbtn',function(){
 
 			// Собираем выбранный чекбоксы в массив
@@ -78,10 +79,9 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 
 			if(cBox.length == 0){
 				$('#empty-list-modal').modal('show')
-				$('#empty-list-modal-c').html('<b>Error:</b> Users is not selected!');  // Change text to edit
+				$('#empty-list-modal-c').html('<b>Error:</b> Users is not selected!'); 
 				return false
 			}
-
 
 			// Выбранный селект
 			let selectedValue = $(".custom-select option:selected").attr("value");
@@ -91,12 +91,12 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 
 			if(typeof(selectedValue) == 'undefined'){
 				$('#empty-list-modal').modal('show')
-				$('#empty-list-modal-c').html('<b>Error:</b> Action is not selected!');  // Change text to edit
+				$('#empty-list-modal-c').html('<b>Error:</b> Action is not selected!');
 			}
 
 			if(selectedValue == 3){
 				$('#delete-list-modal').modal('show')
-				$('#delete-list-modal-c').html(`Are you sure you want to delete ${cBox.length} users?`);  // Change text to edit
+				$('#delete-list-modal-c').html(`Are you sure you want to delete ${cBox.length} users?`);
 				selectedValue = 0;
 					$("#deleteTrue").click(
 					function(){
@@ -117,14 +117,37 @@ function sendAjax() {
             data: {'cBox': cBox, 'selectedValue': selectedValue},
             dataType: 'html',
             success: function(data){
+            	let nf = $.parseJSON(data);
+            	let notfoundNames = '';
+            	if(nf.not_found_ids){
+	            	nf.not_found_ids.forEach(function(elem) {
+	            		notfoundNames += '<i class="fas fa-user"></i> ' + $(`[data-rowId='${elem}']`).find('.username').text() + ', ';
+					})
+            	}
 					cBox.forEach(function(elem) {
+						let result = $.parseJSON(data);
+						let v;
+						if(result.not_found_ids){
+							v = result.not_found_ids.indexOf(elem);
+							$('#info-modal').modal('show')
+							$('#info-modal-c').html(`Users ${notfoundNames} is not found`);
+						}else{
+							v = -1;
+						}
 						if(selectedValue == 1){
-							$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
+							if(v == -1){
+								$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
+								$(`[data-rowId='${elem}']`).find('.modalUser').attr('data-status','1');
+							}
 						}else if(selectedValue == 2){
-							$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
+							if(v == -1){
+								$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
+								$(`[data-rowId='${elem}']`).find('.modalUser').attr('data-status','2');
+							}
 						}else if(selectedValue == 3){
-							$(`[data-rowId='${elem}']`).remove();
-
+							if(v == -1){
+								$(`[data-rowId='${elem}']`).remove();
+							}
 							$('#all-items').prop('checked', false);
 												
 						}else{
@@ -134,8 +157,6 @@ function sendAjax() {
 						$('.custom-select option:first').prop('selected', true);
 
 					});
-      	
-
             }
           })
       }
@@ -164,8 +185,8 @@ $("#all-items").click( function() {
 // Получаем все элементы с классом custom-control-input которые находятся в элементе div с id="checklist"
 // Снимаем галочку с выбрать все при нажатии на чекбокс любого человека
 
-  let countSelected;
-  let countSelectedAll;
+ let countSelected;
+ let countSelectedAll;
 
 $(document).on('click','div#checklist .custom-control-input',function(){
 
@@ -211,11 +232,11 @@ $(document).on('click','#btnDel',function(){
 // Ajax Send Form
 function sendAjaxForm(result_form, ajax_form, url) {
     $.ajax({
-        url:     url, //url страницы (action_ajax_form.php)
-        type:     "POST", //метод отправки
-        dataType: "html", //формат данных
-        data: $("#"+ajax_form).serialize(),  // Сеарилизуем объект
-        success: function(response) { //Данные отправлены успешно
+        url:     url, 
+        type:     "POST", 
+        dataType: "html", 
+        data: $("#"+ajax_form).serialize(), 
+        success: function(response) { 
         	let result = $.parseJSON(response);
         	if(result.status == false){
         		if(result.error.role == 0){
@@ -237,10 +258,11 @@ function sendAjaxForm(result_form, ajax_form, url) {
         		console.log(result);
         		if(result.action == 'add'){
 
-        			//$('#result_form').hide();
         			$('#result_form').html('');
         			// Скрываем div 
         			$("div[id='user-not-found']").remove();
+        			// Снимаем все галочки
+        			$('#all-items').prop('checked', false);
 
 					let role = result.user.roleSelect == 1 ? "User" : "Admin";
 	        		let status = result.user.toggle == 1 ? "<div style='text-align:center;'><i class='fa fa-circle active-circle'></i></div>" : "<div style='text-align:center;'><i class='fa fa-circle not-active-circle'></i></div>";
@@ -327,13 +349,10 @@ function sendAjaxForm(result_form, ajax_form, url) {
 				}else if(result.action == 'delete'){
 					$('#delete-user-form-modal').modal('hide');
 					$(`[data-rowId='${result.user.uId}']`).remove();
-
-				/*	let intro = $('#del-u-id');
-					intro.prop('value', '');*/
 				}
         	}
     	},
-    	error: function(response) { // Данные не отправлены
+    	error: function(response) { 
             $('#result_form').html('Ошибка. Данные не отправлены.');
     	}
  	});
