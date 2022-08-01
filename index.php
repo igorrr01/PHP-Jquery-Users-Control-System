@@ -47,14 +47,7 @@
                       <tbody>
                       <?php     
                       $sql = "SELECT * FROM users";
-                      $arr = $dbConnect->fetchAll($sql);
-                      $array = json_decode($arr, true);
-                      if(isset($array)){
-                        $arrayCount = count($array);
-                      }else{
-                        $arrayCount = 0;
-                      }
-                      if($arrayCount >= 1){
+                      $array = $dbConnect->fetchAll($sql);
                       foreach ($array as $value) {
                         $for = 'for="item-' . $value['id'] . '"';
                       ?>
@@ -67,17 +60,13 @@
                               </div>
                           </td>
                           <td class="username"><?= $value['first_name'] ?> <?= $value['last_name'] ?></td>
-                          <td class="role">
-                            <span> 
-                              <?php  $role = $value['role'] == '1' ? 'User' : 'Admin';  echo $role; ?>
-                            </span>
-                          </td>
+                          <td class="role"><?php  $role = $value['role'] == '1' ? 'User' : 'Admin';  echo $role; ?></td>
                           <td class="status">
                             <div style="text-align:center;">
                             <?php if($value['status'] == 1){ ?>
-                            <i class="fa fa-circle active-circle"></i>
+                            <input class='stat' type='hidden' value='1'><i class="fa fa-circle active-circle"></i></div>
                             <?php }else{ ?>
-                            <i class="fa fa-circle not-active-circle"></i>
+                            <input class='stat' type='hidden' value='0'><i class="fa fa-circle not-active-circle"></i>
                             <?php } ?>
                             </div>
                           </td>
@@ -87,27 +76,16 @@
                               <button class="btn modalUser" type="button" data-toggle="modal"
                                 data-target="#user-form-modal" 
                                 data-id="<?php echo $value['id']; ?>"
-                                data-firstname="<?php echo $value['first_name']; ?>"
-                                data-lastname="<?php echo $value['last_name']; ?>"
-                                data-role="<?php echo $value['role']; ?>"
-                                data-status="<?php echo $value['status']; ?>"
                                 >Edit</button>
-                                </div>
-                                <div class="badge">
+                              </div>
+                              <div class="badge">
                               <button class="btn deleteUser" type="button" data-toggle="modal"
                                 data-target="#delete-user-form-modal" 
-                                data-firstname="<?php echo $value['first_name']; ?>"
-                                data-lastname="<?php echo $value['last_name']; ?>"
                                 data-id="<?php echo $value['id']; ?>"><i
                                   class="fa fa-trash"></i></button></div>
                             </div>
                           </td>
                         </tr>
-                        <?php } ?>
-                        <?php }else{ ?>
-                   <!--      <div class="alert alert-warning" role="alert" id="user-not-found">
-                          Users is not found!
-                        </div> -->
                         <?php } ?>
                       </tbody>
                     </table>

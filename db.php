@@ -34,7 +34,7 @@ class DB{
 		}
 		
 		if(isset($rows)){
-			return json_encode($rows);
+			return $rows;
 		}
 	}
 

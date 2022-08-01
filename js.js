@@ -1,49 +1,36 @@
 $( document ).ready(function() {
 
-// Чистим модаьное окно
-$('#user-form-modal').on('hidden.bs.modal', function (e) {
-    document.getElementById("ajax_form").reset();
-/*    let intro = $('#u-id');
-	intro.prop('value', '');*/
-  })
-
 	$(document).on('click','.modalUser',function(){
 
 	//Сбрасываем уведомления
 	$('#result_form').html('');
 
     let data_id = $(this).data('id');
-    let data_firstname = $(this).data('firstname');
-    let data_lastname = $(this).data('lastname');
-    let data_role = $(this).data('role');
-    let data_status = $(this).attr('data-status');
 
 	// Задаем значения в модальном окне 
-	$('#first-name').val(data_firstname);
-	$('#last-name').val(data_lastname);
-	$('#delete-user-id').val(data_id);
-	$('#delete-user-first-name').val(data_firstname);
-	$('#delete-user-last-name').val(data_lastname);
+	if(data_id){
+		let nameFirstLast = $(`[data-rowId='${data_id}']`).find('.username').text().split(' ');
+		$('#first-name').val(nameFirstLast[0]);
+		$('#last-name').val(nameFirstLast[1]);
+		$('#delete-user-id').val(data_id);
+		$('#delete-user-first-name').val(nameFirstLast[0]);
+		$('#delete-user-last-name').val(nameFirstLast[1]);
 
-	// Меняем поля при едите
-	if(typeof(data_id) != 'undefined'){
-		if(data_status == 1){
-			$('#toggle').prop('checked', true);
-		}else{
-			$('#toggle').removeProp('checked'); 
-		}
+		let toggle = $(`[data-rowId='${data_id}']`).find('.stat').val() == 1 ? "true" : "";
+		$('#toggle').prop('checked', toggle);
 
-		if(data_role !== ""){
-				if(data_role === 1){
-	     			$('#list option:nth-child(2)').prop('selected', true);
-	     		}else{
-	     			$('#list option:nth-child(3)').prop('selected', true);     			
-	     		}
-		}
+		let role = $(`[data-rowId='${data_id}']`).find('.role').html() == 'User' ? "2" : "3";
+	    $(`#list option:nth-child(${role})`).prop('selected', true);
 
-	// Задаем скрытому полю айди
-	let intro = $('#u-id');
-	intro.prop('value', data_id);
+		// Задаем скрытому полю айди
+		let intro = $('#u-id');
+		intro.prop('value', data_id);
+
+	}else{
+		$('#first-name').val('');
+		$('#last-name').val('');
+		$('#toggle').prop('checked', 1);
+		$(`#list option:nth-child(1)`).prop('selected', true);
 	}
 
 	if(typeof(data_id) != 'undefined'){
@@ -65,52 +52,52 @@ $('#user-form-modal').on('hidden.bs.modal', function (e) {
 		$('.custom-select option:first').prop('selected', true);
 	})
 
+	let cBox;
     $(document).on('click','.listbtn',function(){
+		cBox = [];
+		// Собираем выбранный чекбоксы в массив
+		$("input[type=checkbox]:checked").each(function(){
+    		cBox.push($(this).attr("value"));
+    	});
+		// Удаляем пустые элементы с массива
+		cBox = cBox.filter(function (el) {
+    		return (el != null && el != "" || el === 0);
+		});
 
-			// Собираем выбранный чекбоксы в массив
-			let cBox = [];
-			$("input[type=checkbox]:checked").each(function(){
-    			cBox.push($(this).attr("value"));
-    		});
-			// Удаляем пустые элементы с массива
-			cBox = cBox.filter(function (el) {
-    			return (el != null && el != "" || el === 0);
-			});
+		if(cBox.length == 0){
+			$('#empty-list-modal').modal('show')
+			$('#empty-list-modal-c').html('<b>Error:</b> Users is not selected!'); 
+			return false
+		}
 
-			if(cBox.length == 0){
-				$('#empty-list-modal').modal('show')
-				$('#empty-list-modal-c').html('<b>Error:</b> Users is not selected!'); 
-				return false
-			}
+		// Выбранный селект
+		let selectedValue = $(".custom-select option:selected").attr("value");
+		if(typeof(selectedValue) == 'undefined'){
+			selectedValue = $("#customSelect option:selected").attr("value");
+		}
 
-			// Выбранный селект
-			let selectedValue = $(".custom-select option:selected").attr("value");
-			if(typeof(selectedValue) == 'undefined'){
-				selectedValue = $("#customSelect option:selected").attr("value");
-			}
+		if(typeof(selectedValue) == 'undefined'){
+			$('#empty-list-modal').modal('show')
+			$('#empty-list-modal-c').html('<b>Error:</b> Action is not selected!');
+		}
 
-			if(typeof(selectedValue) == 'undefined'){
-				$('#empty-list-modal').modal('show')
-				$('#empty-list-modal-c').html('<b>Error:</b> Action is not selected!');
-			}
+		if(selectedValue == 3){
+			$('#delete-list-modal').modal('show')
+			$('#delete-list-modal-c').html(`Are you sure you want to delete ${cBox.length} users?`);
+		}else{
+			sendAjax(cBox, selectedValue);
+		}
+	});  
 
-			if(selectedValue == 3){
-				$('#delete-list-modal').modal('show')
-				$('#delete-list-modal-c').html(`Are you sure you want to delete ${cBox.length} users?`);
-				selectedValue = 0;
-					$("#deleteTrue").click(
-					function(){
-						selectedValue = 3;
-						sendAjax();
-						$('#delete-list-modal').modal('hide');
-					}
-				);
-			}
+$("#deleteTrue").click(
+	function(){
+		selectedValue = 3;
+		sendAjax(cBox, selectedValue);
+		$('#delete-list-modal').modal('hide');
+	}
+);
 
-			sendAjax();
-
-function sendAjax() {
-	console.log(cBox)
+function sendAjax(cBox, selectedValue) {
           $.ajax({
             url: 'update.php',
             type: 'POST',
@@ -147,6 +134,8 @@ function sendAjax() {
 						}else if(selectedValue == 3){
 							if(v == -1){
 								$(`[data-rowId='${elem}']`).remove();
+								//cBox = cBox.filter(function(f) { return f !== elem })
+								//console.log(cBox)
 							}
 							$('#all-items').prop('checked', false);
 												
@@ -160,9 +149,7 @@ function sendAjax() {
             }
           })
       }
-			return false; 
-		}
-	);      	
+    	
 
 $("#all-items").click( function() {
 
@@ -213,11 +200,10 @@ $(document).on('click','div#checklist .custom-control-input',function(){
 	$(document).on('click','.deleteUser',function(){
 
     let data_id = $(this).data('id');
- 	let data_firstname = $(this).data('firstname');
-    let data_lastname = $(this).data('lastname');
-    $('#del-u-id').val(data_id);
+    let nameFirstLast = $(`[data-rowId='${data_id}']`).find('.username').text().split(' ');
 
-	$('#UserModalLabelDel').text('Are you sure you want to delete the user '+data_firstname+' '+data_lastname);  // Add text when del. user
+    $('#del-u-id').val(data_id);
+	$('#UserModalLabelDel').text('Are you sure you want to delete the user '+nameFirstLast[0]+' '+nameFirstLast[1]);  // Add text when del. user
 
 	})
 
@@ -265,7 +251,7 @@ function sendAjaxForm(result_form, ajax_form, url) {
         			$('#all-items').prop('checked', false);
 
 					let role = result.user.roleSelect == 1 ? "User" : "Admin";
-	        		let status = result.user.toggle == 1 ? "<div style='text-align:center;'><i class='fa fa-circle active-circle'></i></div>" : "<div style='text-align:center;'><i class='fa fa-circle not-active-circle'></i></div>";
+	        		let status = result.user.toggle == 1 ? "<input class='stat' type='hidden' value='1'><div style='text-align:center;'><i class='fa fa-circle active-circle'></i>" : "<input class='stat' type='hidden' value='0'><div style='text-align:center;'><i class='fa fa-circle not-active-circle'></i></div>";
 
 					$('table').append(`
 						<tr data-rowId = '${result.user.uId}'>
@@ -276,31 +262,19 @@ function sendAjaxForm(result_form, ajax_form, url) {
                                 	<label class="custom-control-label" for="item-${result.user.uId}"></label>
                               	</div>
 							</td>
-							<td class="username">
-								${result.user.firstName} ${result.user.lastName}
-							</td>
-							<td class="role">
-                              ${role}
-                          	</td>
-							<td class="status">
-                              ${status}
-                          	</td>
+							<td class="username">${result.user.firstName} ${result.user.lastName}</td>
+							<td class="role">${role}</td>
+							<td class="status">${status}</td>
                           	<td class="button">
                           	<div class="badge">
 	                              <button class="btn modalUser" type="button" data-toggle="modal"
 	                                data-target="#user-form-modal" 
 	                                data-id="${result.user.uId}"
-	                                data-firstname="${result.user.firstName}"
-	                                data-lastname="${result.user.lastName}"
-	                                data-role="${result.user.roleSelect}"
-	                                data-status="${result.user.toggle}"
 	                                >Edit</button>
 	                                </div>
 	                                <div class="badge">
 	                              <button class="btn deleteUser" type="button" data-toggle="modal"
 	                                data-target="#delete-user-form-modal" 
-	                                data-firstname="${result.user.firstName}"
-	                                data-lastname="${result.user.lastName}"
 	                                data-id="${result.user.uId}">
 	                                <i class="fa fa-trash"></i></button>
 	                                </div>
@@ -328,17 +302,11 @@ function sendAjaxForm(result_form, ajax_form, url) {
 	                              <button class="btn modalUser" type="button" data-toggle="modal"
 	                                data-target="#user-form-modal" 
 	                                data-id="${result.user.uId}"
-	                                data-firstname="${result.user.firstName}"
-	                                data-lastname="${result.user.lastName}"
-	                                data-role="${result.user.roleSelect}"
-	                                data-status="${result.user.toggle}"
 	                                >Edit</button>
 	                                </div>
 	                                <div class="badge">
 	                              <button class="btn deleteUser" type="button" data-toggle="modal"
 	                                data-target="#delete-user-form-modal" 
-	                                data-firstname="${result.user.firstName}"
-	                                data-lastname="${result.user.lastName}"
 	                                data-id="${result.user.uId}">
 	                                <i class="fa fa-trash"></i></button>
 	                                </div>
