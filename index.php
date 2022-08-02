@@ -49,25 +49,19 @@
                       $sql = "SELECT * FROM users";
                       $array = $dbConnect->fetchAll($sql);
                       foreach ($array as $value) {
-                        $for = 'for="item-' . $value['id'] . '"';
                       ?>
                         <tr data-rowId = '<?= $value['id'] ?>' id="uRow">
                           <td class="align-middle" >
                             <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top" id="checklist">
-                              <input type="hidden" class="form-control" id="list-action" name="list-action" value="true">
-                                <input type="checkbox" name="az" class="custom-control-input" id="item-<?php echo $value['id']; ?>" value="<?php echo $value['id']; ?>">
-                                <label class="custom-control-label" for="item-<?php echo $value['id']; ?>"></label>
+                                <input type="checkbox" name="az" class="custom-control-input" id="item-<?= $value['id'] ?>" value="<?= $value['id'] ?>">
+                                <label class="custom-control-label" for="item-<?= $value['id'] ?>"></label>
                               </div>
                           </td>
                           <td class="username"><?= $value['first_name'] ?> <?= $value['last_name'] ?></td>
                           <td class="role"><?php  $role = $value['role'] == '1' ? 'User' : 'Admin';  echo $role; ?></td>
                           <td class="status">
                             <div style="text-align:center;">
-                            <?php if($value['status'] == 1){ ?>
-                            <input class='stat' type='hidden' value='1'><i class="fa fa-circle active-circle"></i></div>
-                            <?php }else{ ?>
-                            <input class='stat' type='hidden' value='0'><i class="fa fa-circle not-active-circle"></i>
-                            <?php } ?>
+                            <input class='stat' type='hidden' value='<?= $value['status'] ?>'><i class="fa fa-circle <?php if($value['status'] != 1) echo "not-" ?>active-circle  "></i></div>
                             </div>
                           </td>
                           <td class="button">

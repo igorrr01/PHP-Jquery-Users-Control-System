@@ -1,6 +1,8 @@
 <?php 
 require __DIR__ . '/db.php';
 
+if ($_SERVER['REQUEST_METHOD'] == 'GET') exit;
+
 $cBox = $_POST['cBox'];
 $selectedValue = $_POST['selectedValue'];
 

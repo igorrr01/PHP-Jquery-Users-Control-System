@@ -257,7 +257,6 @@ function sendAjaxForm(result_form, ajax_form, url) {
 						<tr data-rowId = '${result.user.uId}'>
 							<td>	
 								<div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top" id="checklist">
-                              		<input type="hidden" class="form-control" id="list-action" name="list-action" value="true">
                                 	<input type="checkbox" name="az" class="custom-control-input" id="item-${result.user.uId}" value="${result.user.uId}">
                                 	<label class="custom-control-label" for="item-${result.user.uId}"></label>
                               	</div>
