@@ -23,8 +23,7 @@ $( document ).ready(function() {
 	    $(`#list option:nth-child(${role})`).prop('selected', true);
 
 		// Задаем скрытому полю айди
-		let intro = $('#u-id');
-		intro.prop('value', data_id);
+		let intro = $('#u-id').val(data_id);
 
 	}else{
 		$('#first-name').val('');
@@ -33,24 +32,22 @@ $( document ).ready(function() {
 		$(`#list option:nth-child(1)`).prop('selected', true);
 	}
 
-	if(typeof(data_id) != 'undefined'){
-		$('#UserModalLabel').text('Edit user');  // Change text to edit
-		$('#btn').text('Save');  // Change text to edit
-	}else{
-		$('#UserModalLabel').text('Add user');  // Change text to add
-		$('#btn').text('Add');  // Change text to edit
-	}
+	// Change modal text
+	let userModLabel = $(this).data('action') == 'add-user' ? "Add user" : "Edit user";
+	let userModBtn = $(this).data('action') == 'add-user' ? "Add" : "Save";
+	$('#UserModalLabel').text(userModLabel); 
+	$('#btn').text(userModBtn); 
+
 
   	});
 
 	// Для избежания конфликтов select
-	$(document).on('click','#customSelect',function(){
-		$('.custom-select option:first').prop('selected', true);
-	})
-
-	$(document).on('click','.customSelect',function(){
-		$('.custom-select option:first').prop('selected', true);
-	})
+	$('#status-select').on('change', function() {
+  		$('#status-select2').val($(this).val());
+	});
+	$('#status-select2').on('change', function() {
+  		$('#status-select').val($(this).val());
+	});
 
 	let cBox;
     $(document).on('click','.listbtn',function(){
@@ -102,9 +99,9 @@ function sendAjax(cBox, selectedValue) {
             url: 'update.php',
             type: 'POST',
             data: {'cBox': cBox, 'selectedValue': selectedValue},
-            dataType: 'html',
+            dataType: 'json',
             success: function(data){
-            	let nf = $.parseJSON(data);
+            	let nf = data;
             	let notfoundNames = '';
             	if(nf.not_found_ids){
 	            	nf.not_found_ids.forEach(function(elem) {
@@ -112,7 +109,7 @@ function sendAjax(cBox, selectedValue) {
 					})
             	}
 					cBox.forEach(function(elem) {
-						let result = $.parseJSON(data);
+						let result = data;
 						let v;
 						if(result.not_found_ids){
 							v = result.not_found_ids.indexOf(elem);
@@ -121,29 +118,22 @@ function sendAjax(cBox, selectedValue) {
 						}else{
 							v = -1;
 						}
-						if(selectedValue == 1){
+						if(selectedValue == 1 || selectedValue == 2){
 							if(v == -1){
-								$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
-								$(`[data-rowId='${elem}']`).find('.modalUser').attr('data-status','1');
-							}
-						}else if(selectedValue == 2){
-							if(v == -1){
-								$(`[data-rowId='${elem}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
-								$(`[data-rowId='${elem}']`).find('.modalUser').attr('data-status','2');
+								let remove = selectedValue == 1 ? "not-active-circle" : "active-circle";
+								let add = selectedValue == 1 ? "active-circle" : "not-active-circle";
+								$(`[data-rowId='${elem}']`).find('.fa-circle').removeClass(remove).addClass(add);
+								$(`[data-rowId='${elem}']`).find('.stat').val(selectedValue);
 							}
 						}else if(selectedValue == 3){
 							if(v == -1){
 								$(`[data-rowId='${elem}']`).remove();
-								//cBox = cBox.filter(function(f) { return f !== elem })
-								//console.log(cBox)
 							}
 							$('#all-items').prop('checked', false);
 												
 						}else{
 							return false;
 						}
-
-						$('.custom-select option:first').prop('selected', true);
 
 					});
             }
@@ -220,10 +210,10 @@ function sendAjaxForm(result_form, ajax_form, url) {
     $.ajax({
         url:     url, 
         type:     "POST", 
-        dataType: "html", 
+        dataType: "json", 
         data: $("#"+ajax_form).serialize(), 
         success: function(response) { 
-        	let result = $.parseJSON(response);
+        	let result = response;
         	if(result.status == false){
         		if(result.error.role == 0){
         			$('#result_form').html('<div class="alert alert-danger" role="alert"><b>Error:</b> Role must be selected!</div>');
@@ -310,9 +300,8 @@ function sendAjaxForm(result_form, ajax_form, url) {
 	                                <i class="fa fa-trash"></i></button>
 	                                </div>
 	                            </div>`);
-					let intro = $('#u-id');
-					intro.prop('value', '');
-					
+						let intro = $('#u-id').val();
+
 				}else if(result.action == 'delete'){
 					$('#delete-user-form-modal').modal('hide');
 					$(`[data-rowId='${result.user.uId}']`).remove();

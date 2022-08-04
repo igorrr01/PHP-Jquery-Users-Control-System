@@ -12,10 +12,10 @@
                   <h6 class="mr-2"><span><i class="fas fa-users"></i> Users</span></h6>
                     <div class = "row">
                       <div class="col-sm-6">
-                        <button type="button" class="btn modalUser" data-toggle="modal" data-target="#user-form-modal">Add</button>
+                        <button type="button" class="btn modalUser" data-action="add-user"  data-toggle="modal" data-target="#user-form-modal">Add</button>
                       </div>
                       <div class="col-sm-5">
-                        <select class="custom-select">
+                        <select class="custom-select" id="status-select">
                           <option selected>Please Select</option>
                           <option value="1">Set active</option>
                           <option value="2">Set not active</option>
@@ -67,7 +67,7 @@
                           <td class="button">
                             <div class="btn-group align-top text-center" >
                               <div class="badge">
-                              <button class="btn modalUser" type="button" data-toggle="modal"
+                              <button class="btn modalUser" type="button" data-action="edit-user" data-toggle="modal"
                                 data-target="#user-form-modal" 
                                 data-id="<?php echo $value['id']; ?>"
                                 >Edit</button>
@@ -90,7 +90,7 @@
                         <button type="button" class="btn modalUser" data-toggle="modal" data-target="#user-form-modal">Add</button>
                       </div>
                       <div class="col-sm-5">
-                        <select class="custom-select" id="customSelect">
+                        <select class="custom-select" id="status-select2">
                           <option selected>Please Select</option>
                           <option value="1">Set active</option>
                           <option value="2">Set not active</option>
