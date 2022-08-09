@@ -24,7 +24,6 @@ $( document ).ready(function() {
 
 		// Задаем скрытому полю айди
 		let intro = $('#u-id').val(data_id);
-
 	}else{
 		$('#first-name').val('');
 		$('#last-name').val('');
@@ -53,13 +52,9 @@ $( document ).ready(function() {
     $(document).on('click','.listbtn',function(){
 		cBox = [];
 		// Собираем выбранный чекбоксы в массив
-		$("input[type=checkbox]:checked").each(function(){
+		$("input[name=az][type=checkbox]:checked").each(function(){
     		cBox.push($(this).attr("value"));
     	});
-		// Удаляем пустые элементы с массива
-		cBox = cBox.filter(function (el) {
-    		return (el != null && el != "" || el === 0);
-		});
 
 		if(cBox.length == 0){
 			$('#empty-list-modal').modal('show')
@@ -120,8 +115,8 @@ function sendAjax(cBox, selectedValue) {
 						}
 						if(selectedValue == 1 || selectedValue == 2){
 							if(v == -1){
-								let remove = selectedValue == 1 ? "not-active-circle" : "active-circle";
-								let add = selectedValue == 1 ? "active-circle" : "not-active-circle";
+								let remove = selectedValue == 1 ? "" : "active";
+								let add = selectedValue == 1 ? "active" : "";
 								$(`[data-rowId='${elem}']`).find('.fa-circle').removeClass(remove).addClass(add);
 								$(`[data-rowId='${elem}']`).find('.stat').val(selectedValue);
 							}
@@ -241,7 +236,7 @@ function sendAjaxForm(result_form, ajax_form, url) {
         			$('#all-items').prop('checked', false);
 
 					let role = result.user.roleSelect == 1 ? "User" : "Admin";
-	        		let status = result.user.toggle == 1 ? "<input class='stat' type='hidden' value='1'><div style='text-align:center;'><i class='fa fa-circle active-circle'></i>" : "<input class='stat' type='hidden' value='0'><div style='text-align:center;'><i class='fa fa-circle not-active-circle'></i></div>";
+	        		let status = result.user.toggle == 1 ? "<input class='stat' type='hidden' value='1'><div style='text-align:center;'><i class='fa fa-circle circle active'></i>" : "<input class='stat' type='hidden' value='0'><div style='text-align:center;'><i class='fa fa-circle circle'></i></div>";
 
 					$('table').append(`
 						<tr data-rowId = '${result.user.uId}'>
@@ -281,9 +276,9 @@ function sendAjaxForm(result_form, ajax_form, url) {
 					}
 
 					if(result.user.toggle == 1){
-						$(`[data-rowId='${result.user.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle active-circle"></i></div>');
+						$(`[data-rowId='${result.user.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle circle active"></i></div>');
 					}else{
-						$(`[data-rowId='${result.user.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle not-active-circle"></i></div>');
+						$(`[data-rowId='${result.user.uId}']`).find('.status').html('<div style="text-align:center"><i class="fa fa-circle circle"></i></div>');
 					}
 
 					$(`[data-rowId='${result.user.uId}']`).find('.button').html(`<div class="btn-group align-top" id="editDel">
@@ -300,8 +295,7 @@ function sendAjaxForm(result_form, ajax_form, url) {
 	                                <i class="fa fa-trash"></i></button>
 	                                </div>
 	                            </div>`);
-						let intro = $('#u-id').val();
-
+						intro = $('#u-id').val('');
 				}else if(result.action == 'delete'){
 					$('#delete-user-form-modal').modal('hide');
 					$(`[data-rowId='${result.user.uId}']`).remove();

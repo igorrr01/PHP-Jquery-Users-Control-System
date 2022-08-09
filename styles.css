@@ -2,12 +2,15 @@ body{
   margin-top:20px;
   background:#f8f8f8
 }
-.active-circle {
-  color: green;
-}
-.not-active-circle {
+
+.circle {
   color: gray;
 }
+
+.active {
+  color: green;
+}
+
 
 .material-toggle {
   position: absolute;

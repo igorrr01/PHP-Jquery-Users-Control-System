@@ -61,7 +61,9 @@
                           <td class="role"><?php  $role = $value['role'] == '1' ? 'User' : 'Admin';  echo $role; ?></td>
                           <td class="status">
                             <div style="text-align:center;">
-                            <input class='stat' type='hidden' value='<?= $value['status'] ?>'><i class="fa fa-circle <?php if($value['status'] != 1) echo "not-" ?>active-circle  "></i></div>
+                              <input class='stat' type='hidden' value='<?= $value['status'] ?>'>
+                              <i class="fa fa-circle circle <?php if($value['status'] == 1) echo "active" ?>"></i>
+                            </div>
                             </div>
                           </td>
                           <td class="button">

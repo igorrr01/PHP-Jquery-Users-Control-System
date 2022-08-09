@@ -3,6 +3,33 @@ require __DIR__ . '/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') exit;
 
+if(!isset($_POST["selectedValue"]) ){
+	$result = [
+		'status' => false,
+		'error' => [
+			'code' => 120,
+			'message' => 'No action selected'
+		],
+	]; 
+echo json_encode($result); 
+exit;
+
+}
+
+if(!isset($_POST["cBox"]) ){
+	$result = [
+		'status' => false,
+		'error' => [
+			'code' => 121,
+			'message' => 'Users is not selected!'
+		],
+	]; 
+echo json_encode($result); 
+exit;
+
+}
+
+
 $cBox = $_POST['cBox'];
 $selectedValue = $_POST['selectedValue'];
 
@@ -45,19 +72,6 @@ if($selectedValue == 1 || $selectedValue == 2){
 		$sql = "DELETE FROM `users` WHERE `id` = '$value' ";
 		$dbConnect->query($sql);
 	}
-}else{
-
-$result = [
-	'status' => false,
-	'error' => [
-		'code' => 120,
-		'message' => 'No action selected'
-	],
-]; 
-
-echo json_encode($result); 
-exit;
-
 }
 
 if(!empty($not_found)){

@@ -38,6 +38,18 @@ if(isset($_POST["delAction"]) && $_POST["delAction"] == true ){
 	exit;
 }
 
+if(!isset($_POST["first-name"]) || !isset($_POST["last-name"]) || !isset($_POST["roleSelect"]) ){
+	$result = [
+		'status' => false, 
+		'error' => [
+			'code' => 112,
+			'message' => 'User parameters not received',
+		]
+	]; 
+	echo json_encode($result); 
+	exit;
+}
+
 $firstName = htmlspecialchars($_POST["first-name"]);
 $lastName = htmlspecialchars($_POST["last-name"]);
 $roleSelect = htmlspecialchars($_POST["roleSelect"]);

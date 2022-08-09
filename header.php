@@ -11,4 +11,4 @@
 </head>
 <body>
 	<link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
-  <link href="styles.css?v=1.1" rel="stylesheet">
+  <link href="styles.css?v=1.2" rel="stylesheet">
