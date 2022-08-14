@@ -1,6 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
 <?php require __DIR__ . '/db.php'; ?>
-<?php require __DIR__ . '/header.php'; ?>
-
+<?php include __DIR__ . '/header.php'; ?>
+<body>
   <div class="container" id="container">
     <div class="row flex-lg-nowrap">
       <div class="col">
@@ -228,7 +230,7 @@
           </div>
         </div>
       </div>  
-
+      
     </div>
   </div>
 </body>
