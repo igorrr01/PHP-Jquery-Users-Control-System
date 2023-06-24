@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <?php require __DIR__ . '/db.php'; ?>
 <?php include __DIR__ . '/header.php'; ?>
 <body>
